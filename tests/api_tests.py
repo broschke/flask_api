@@ -42,6 +42,9 @@ class TestAPI(unittest.TestCase):
         postA = models.Post(title="Example Post A", body="Just a test")
         postB = models.Post(title="Example Post B", body="Still a test")
 
+        session.add_all([postA, postB])
+        session.commit()
+
         response = self.client.get("/api/posts")
 
         self.assertEqual(response.status_code, 200)
@@ -58,8 +61,7 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(postB["title"], "Example Post B")
         self.assertEqual(postB["body"], "Still a test")
 
-        session.add_all([postA, postB])
-        session.commit()
+
 
 if __name__ == "__main__":
     unittest.main()

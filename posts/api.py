@@ -36,3 +36,15 @@ def post_get(id):
     # Return the post as JSON
     data = json.dumps(post.as_dictionary())
     return Response(data, 200, mimetype="application/json")
+
+@app.route("/api/posts/<id>", methods=["DELETE"])
+@decorators.accept("application/json")
+def delete_post(id):
+    post = session.query(models.Post).get(id)
+    session.delete(post)
+    session.commit()
+    message = "Post {} deleted".format(id)
+    data = json.dumps({"message": message})
+    return Response(data, 200, mimetype='application/json')
+    
+    

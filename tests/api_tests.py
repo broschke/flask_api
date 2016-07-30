@@ -103,6 +103,24 @@ class TestAPI(unittest.TestCase):
         data = json.loads(response.data.decode("ascii"))
         self.assertEqual(data["message"],
                          "Request must accept application/json data")
+                         
+    def test_delete_post(self):
+        """ Test deleting a single post """
+        postA = models.Post(title="Example Post A", body="Just a test")
+        postB = models.Post(title="Example Post B", body="Still a test")
+        
+        session.add_all([postA, postB])
+        session.commit()
+        
+        response = self.client.delete("api/posts/{}".format(postA.id),
+            headers=[("Accept", "application/json")]
+        )    
+        data = json.loads(response.data.decode("ascii"))
+        self.assertEqual(len(data), 1)
+        # Test response status, message, and mimetype
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/json")
+        self.assertEqual(data["message"], "Post 1 deleted")
 
 if __name__ == "__main__":
     unittest.main()

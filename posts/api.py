@@ -92,6 +92,16 @@ def posts_post():
     headers = {"Location": url_for("post_get", id=post.id)}
     return Response(data, 201, headers=headers,
                     mimetype="application/json")
-                    
-                    
-    
+
+@app.route("/api/posts/<id>", methods=["PUT"])
+@decorators.accept("application/json")
+@decorators.require("application/json")
+def put_post(id):
+    """ Update an entry"""
+    post = session.query(models.Post).get(id)
+    data = request.json
+    post.title=data["title"]
+    post.body=data["body"]
+    session.commit()
+    data = json.dumps(post.as_dictionary())
+    return Response(data, 201, mimetype="application/json")
